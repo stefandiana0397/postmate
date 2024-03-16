@@ -21,16 +21,18 @@ class PostRepositoryImpl
     constructor(private val api: GorestAPI, private val postDao: PostDao) : IPostRepository {
         override suspend fun fetchPostsByUser(user: User) =
             flow<Resource<List<Post>>> {
-                var localPosts = postDao.getPostsByUserId(user.id)?.toPostList()?.sortedBy { it.title } ?: emptyList()
+                var localPosts = postDao.getPostsByUserId(user.id)?.toPostList() ?: emptyList()
                 emit(Resource.Loading(localPosts))
 
                 try {
                     val response = api.getPostsByUser(user.id)
                     val remoteUsers = response.body()?.toPostList()
                     val postEntities = remoteUsers?.toPostEntityList()
-                    postDao.deletePostById(user.id)
-                    postEntities?.let { postDao.insertPosts(it) }
-                    localPosts = postEntities?.toPostList()?.sortedBy { it.title } ?: localPosts
+                    postEntities?.let {
+                        postDao.deletePostsByUserId(user.id)
+                        postDao.insertPosts(it)
+                    }
+                    localPosts = postEntities?.toPostList() ?: localPosts
                     emit(Resource.Success(localPosts))
                 } catch (e: HttpException) {
                     emit(Resource.Error(message = e.message ?: "Invalid Response", data = localPosts))

@@ -20,16 +20,18 @@ class UserRepositoryImpl
     constructor(private val api: GorestAPI, private val userDao: UserDao) : IUserRepository {
         override suspend fun fetchUsers() =
             flow<Resource<List<User>>> {
-                var localUsers = userDao.getUsers()?.toUserList()?.sortedBy { it.name } ?: emptyList()
+                var localUsers = userDao.getUsers()?.toUserList() ?: emptyList()
                 emit(Resource.Loading(localUsers))
 
                 try {
                     val response = api.getUsers()
                     val remoteUsers = response.body()?.toUserList()
                     val userEntities = remoteUsers?.toUserEntityList()
-                    userDao.deleteAll()
-                    userEntities?.let { userDao.insertUsers(it) }
-                    localUsers = userEntities?.toUserList()?.sortedBy { it.name } ?: localUsers
+                    userEntities?.let {
+                        userDao.deleteAll()
+                        userDao.insertUsers(it)
+                    }
+                    localUsers = userEntities?.toUserList() ?: localUsers
                     emit(Resource.Success(localUsers))
                 } catch (e: HttpException) {
                     emit(Resource.Error(message = e.message ?: "Invalid Response", data = localUsers))

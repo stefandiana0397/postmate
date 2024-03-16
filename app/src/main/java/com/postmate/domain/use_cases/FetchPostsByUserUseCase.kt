@@ -13,11 +13,11 @@ class FetchPostsByUserUseCase
     ) {
         suspend fun execute(user: User) =
             postRepository.fetchPostsByUser(user).map { resource ->
+                val posts = resource.data?.sortedBy { it.title } ?: emptyList()
                 when (resource) {
-                    is Resource.Loading, is Resource.Success -> {
-                        Resource.Success(resource.data ?: emptyList())
-                    }
-                    else -> resource
+                    is Resource.Loading -> Resource.Loading(posts)
+                    is Resource.Success -> Resource.Success(posts)
+                    is Resource.Error -> Resource.Error(message = resource.message ?: "", data = posts)
                 }
             }
     }

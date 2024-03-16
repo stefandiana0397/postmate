@@ -100,6 +100,7 @@ dependencies {
     // Gson
     implementation(libs.gson)
 
+    implementation(libs.androidx.core.ktx.test)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -107,4 +108,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(libs.androidx.arch.core)
+    testImplementation(libs.kotlin.coroutine)
+    testImplementation(libs.bundles.mockk)
+    testImplementation(kotlin("test"))
 }

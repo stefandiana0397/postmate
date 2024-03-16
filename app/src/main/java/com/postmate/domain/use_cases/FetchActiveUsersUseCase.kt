@@ -12,12 +12,11 @@ class FetchActiveUsersUseCase
     ) {
         suspend fun execute() =
             userRepository.fetchUsers().map { resource ->
+                val activeUsers = resource.data?.filter { it.isActive }?.sortedBy { it.name } ?: emptyList()
                 when (resource) {
-                    is Resource.Loading, is Resource.Success -> {
-                        val activeUsers = resource.data?.filter { it.isActive }
-                        Resource.Success(activeUsers ?: emptyList())
-                    }
-                    else -> resource
+                    is Resource.Loading -> Resource.Loading(activeUsers)
+                    is Resource.Success -> Resource.Success(activeUsers)
+                    is Resource.Error -> Resource.Error(message = resource.message ?: "", data = activeUsers)
                 }
             }
     }
