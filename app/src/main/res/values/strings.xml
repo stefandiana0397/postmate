@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Postmate</string>
+    <string name="contacte">Contacte</string>
+    <string name="contactele_mele">Contactele mele</string>
+    <string name="detalii_contact">Detalii contact</string>
+
+
+    <string name="no_data">No Data</string>
+
+    <string name="error_loading_entries">An unexpected error occurred while loading daily entries.</string>
+    <string name="error_entry">An unexpected error occurred</string>
+</resources>
