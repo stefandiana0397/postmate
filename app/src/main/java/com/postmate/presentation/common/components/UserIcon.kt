@@ -1,4 +1,4 @@
-package com.postmate.presentation.common
+package com.postmate.presentation.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,7 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import com.postmate.presentation.user_list.UserUtil
+import com.postmate.presentation.common.util.FormattingUtils
 
 @Composable
 fun UserIcon(
@@ -30,12 +30,12 @@ fun UserIcon(
                 .width(50.dp)
                 .height(50.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.tertiary),
+                .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)),
         contentAlignment = Alignment.Center,
     ) {
         if (displayPhoto) {
             SubcomposeAsyncImage(
-                model = UserUtil.getPhotoUrl(name),
+                model = FormattingUtils.getPhotoUrl(name),
                 contentDescription = "Profile image",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -43,7 +43,7 @@ fun UserIcon(
             )
         } else {
             Text(
-                text = UserUtil.extractInitials(name),
+                text = FormattingUtils.extractInitials(name),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onTertiary,
             )

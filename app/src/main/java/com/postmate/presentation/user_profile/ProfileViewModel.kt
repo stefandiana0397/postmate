@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.postmate.domain.model.User
 import com.postmate.domain.use_cases.FetchPostsByUserUseCase
-import com.postmate.util.Resource
+import com.postmate.presentation.common.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

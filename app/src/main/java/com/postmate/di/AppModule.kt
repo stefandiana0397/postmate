@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import com.postmate.data.local.LocalDatabase
 import com.postmate.data.remote.GorestAPI
-import com.postmate.util.Constants.BASE_URL
-import com.postmate.util.Constants.DATABASE_NAME
+import com.postmate.presentation.common.util.Constants.BASE_URL
+import com.postmate.presentation.common.util.Constants.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

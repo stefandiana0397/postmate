@@ -1,42 +1,4 @@
 package com.postmate.presentation.ui.theme
-
-// import android.app.Activity
-// import android.os.Build
-// import androidx.compose.foundation.isSystemInDarkTheme
-// import androidx.compose.material3.MaterialTheme
-// import androidx.compose.material3.darkColorScheme
-// import androidx.compose.material3.dynamicDarkColorScheme
-// import androidx.compose.material3.dynamicLightColorScheme
-// import androidx.compose.material3.lightColorScheme
-// import androidx.compose.runtime.Composable
-// import androidx.compose.runtime.SideEffect
-// import androidx.compose.ui.graphics.toArgb
-// import androidx.compose.ui.platform.LocalContext
-// import androidx.compose.ui.platform.LocalView
-// import androidx.core.view.WindowCompat
-//
-// private val DarkColorScheme = darkColorScheme(
-//    primary = Purple80,
-//    secondary = PurpleGrey80,
-//    tertiary = Pink80
-// )
-//
-// private val LightColorScheme = lightColorScheme(
-//    primary = Purple40,
-//    secondary = PurpleGrey40,
-//    tertiary = Pink40
-//
-//    /* Other default colors to override
-//    background = Color(0xFFFFFBFE),
-//    surface = Color(0xFFFFFBFE),
-//    onPrimary = Color.White,
-//    onSecondary = Color.White,
-//    onTertiary = Color.White,
-//    onBackground = Color(0xFF1C1B1F),
-//    onSurface = Color(0xFF1C1B1F),
-//    */
-// )
-
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -49,15 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-
-@Immutable
-data class ExtendedColorScheme(
-    val customColor1: ColorFamily,
-)
 
 private val lightScheme =
     lightColorScheme(
@@ -89,6 +45,13 @@ private val lightScheme =
         inverseSurface = inverseSurfaceLight,
         inverseOnSurface = inverseOnSurfaceLight,
         inversePrimary = inversePrimaryLight,
+        surfaceDim = surfaceDimLight,
+        surfaceBright = surfaceBrightLight,
+        surfaceContainerLowest = surfaceContainerLowestLight,
+        surfaceContainerLow = surfaceContainerLowLight,
+        surfaceContainer = surfaceContainerLight,
+        surfaceContainerHigh = surfaceContainerHighLight,
+        surfaceContainerHighest = surfaceContainerHighestLight,
     )
 
 private val darkScheme =
@@ -121,6 +84,13 @@ private val darkScheme =
         inverseSurface = inverseSurfaceDark,
         inverseOnSurface = inverseOnSurfaceDark,
         inversePrimary = inversePrimaryDark,
+        surfaceDim = surfaceDimDark,
+        surfaceBright = surfaceBrightDark,
+        surfaceContainerLowest = surfaceContainerLowestDark,
+        surfaceContainerLow = surfaceContainerLowDark,
+        surfaceContainer = surfaceContainerDark,
+        surfaceContainerHigh = surfaceContainerHighDark,
+        surfaceContainerHighest = surfaceContainerHighestDark,
     )
 
 private val mediumContrastLightColorScheme =
@@ -153,6 +123,13 @@ private val mediumContrastLightColorScheme =
         inverseSurface = inverseSurfaceLightMediumContrast,
         inverseOnSurface = inverseOnSurfaceLightMediumContrast,
         inversePrimary = inversePrimaryLightMediumContrast,
+        surfaceDim = surfaceDimLightMediumContrast,
+        surfaceBright = surfaceBrightLightMediumContrast,
+        surfaceContainerLowest = surfaceContainerLowestLightMediumContrast,
+        surfaceContainerLow = surfaceContainerLowLightMediumContrast,
+        surfaceContainer = surfaceContainerLightMediumContrast,
+        surfaceContainerHigh = surfaceContainerHighLightMediumContrast,
+        surfaceContainerHighest = surfaceContainerHighestLightMediumContrast,
     )
 
 private val highContrastLightColorScheme =
@@ -185,6 +162,13 @@ private val highContrastLightColorScheme =
         inverseSurface = inverseSurfaceLightHighContrast,
         inverseOnSurface = inverseOnSurfaceLightHighContrast,
         inversePrimary = inversePrimaryLightHighContrast,
+        surfaceDim = surfaceDimLightHighContrast,
+        surfaceBright = surfaceBrightLightHighContrast,
+        surfaceContainerLowest = surfaceContainerLowestLightHighContrast,
+        surfaceContainerLow = surfaceContainerLowLightHighContrast,
+        surfaceContainer = surfaceContainerLightHighContrast,
+        surfaceContainerHigh = surfaceContainerHighLightHighContrast,
+        surfaceContainerHighest = surfaceContainerHighestLightHighContrast,
     )
 
 private val mediumContrastDarkColorScheme =
@@ -217,6 +201,13 @@ private val mediumContrastDarkColorScheme =
         inverseSurface = inverseSurfaceDarkMediumContrast,
         inverseOnSurface = inverseOnSurfaceDarkMediumContrast,
         inversePrimary = inversePrimaryDarkMediumContrast,
+        surfaceDim = surfaceDimDarkMediumContrast,
+        surfaceBright = surfaceBrightDarkMediumContrast,
+        surfaceContainerLowest = surfaceContainerLowestDarkMediumContrast,
+        surfaceContainerLow = surfaceContainerLowDarkMediumContrast,
+        surfaceContainer = surfaceContainerDarkMediumContrast,
+        surfaceContainerHigh = surfaceContainerHighDarkMediumContrast,
+        surfaceContainerHighest = surfaceContainerHighestDarkMediumContrast,
     )
 
 private val highContrastDarkColorScheme =
@@ -249,6 +240,13 @@ private val highContrastDarkColorScheme =
         inverseSurface = inverseSurfaceDarkHighContrast,
         inverseOnSurface = inverseOnSurfaceDarkHighContrast,
         inversePrimary = inversePrimaryDarkHighContrast,
+        surfaceDim = surfaceDimDarkHighContrast,
+        surfaceBright = surfaceBrightDarkHighContrast,
+        surfaceContainerLowest = surfaceContainerLowestDarkHighContrast,
+        surfaceContainerLow = surfaceContainerLowDarkHighContrast,
+        surfaceContainer = surfaceContainerDarkHighContrast,
+        surfaceContainerHigh = surfaceContainerHighDarkHighContrast,
+        surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
     )
 
 @Immutable
@@ -288,10 +286,7 @@ fun PostmateTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = Color.Transparent.toArgb()
-            window.isNavigationBarContrastEnforced = true
-            val insets = WindowCompat.getInsetsController(window, view)
-            insets.isAppearanceLightStatusBars = !darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 

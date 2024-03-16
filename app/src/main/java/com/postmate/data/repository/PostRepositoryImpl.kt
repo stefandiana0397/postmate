@@ -8,9 +8,8 @@ import com.postmate.data.remote.mapper.toPostList
 import com.postmate.domain.model.Post
 import com.postmate.domain.model.User
 import com.postmate.domain.repository.IPostRepository
-import com.postmate.util.Resource
+import com.postmate.presentation.common.util.Resource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
@@ -22,7 +21,6 @@ class PostRepositoryImpl
     constructor(private val api: GorestAPI, private val postDao: PostDao) : IPostRepository {
         override suspend fun fetchPostsByUser(user: User) =
             flow<Resource<List<Post>>> {
-                delay(1000L)
                 var localPosts = postDao.getPostsByUserId(user.id)?.toPostList()?.sortedBy { it.title } ?: emptyList()
                 emit(Resource.Loading(localPosts))
 

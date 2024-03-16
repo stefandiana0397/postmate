@@ -65,17 +65,17 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
                     },
                 ),
         ) { entry ->
-            val viewModel = hiltViewModel<ProfileViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
 
             val userId = entry.arguments?.getInt(ArgumentTypeEnum.ITEM_ID.name, 0)
             val name = entry.arguments?.getString(ArgumentTypeEnum.NAME.name, "")
             val email = entry.arguments?.getString(ArgumentTypeEnum.EMAIL.name, "")
             val displayPhoto = entry.arguments?.getBoolean(ArgumentTypeEnum.DISPLAY_PHOTO.name, true)
 
+            val viewModel = hiltViewModel<ProfileViewModel>()
             LaunchedEffect(key1 = userId) {
                 viewModel.onEvent(ProfileEvent.LoadUser(userId, name, email, displayPhoto))
             }
+            val state by viewModel.state.collectAsStateWithLifecycle()
 
             ProfileScreen(
                 profileState = state,

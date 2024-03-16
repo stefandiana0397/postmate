@@ -1,7 +1,7 @@
 package com.postmate.domain.use_cases
 
 import com.postmate.domain.repository.IUserRepository
-import com.postmate.util.Resource
+import com.postmate.presentation.common.util.Resource
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

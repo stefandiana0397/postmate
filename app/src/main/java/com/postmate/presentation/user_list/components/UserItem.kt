@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +15,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.postmate.domain.model.User
-import com.postmate.presentation.common.UserIcon
+import com.postmate.presentation.common.components.UserIcon
 import com.postmate.presentation.ui.theme.spacingMedium
 
 @Composable
@@ -29,7 +28,7 @@ fun UserItem(
     ListItem(
         headlineContent = {
             Text(
-                text = user.name + " " + user.id,
+                text = user.name,
                 style = MaterialTheme.typography.bodyLarge,
             )
         },

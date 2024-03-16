@@ -1,6 +1,6 @@
-package com.postmate.presentation.user_list
+package com.postmate.presentation.common.util
 
-object UserUtil {
+object FormattingUtils {
     fun extractInitials(fullName: String): String {
         val words = fullName.split(" ")
         val initials = words.mapNotNull { it.firstOrNull()?.uppercaseChar() }

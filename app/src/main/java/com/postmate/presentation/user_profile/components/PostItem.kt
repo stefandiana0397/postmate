@@ -25,7 +25,7 @@ fun PostItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondary)
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
             .padding(spacingMedium),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
@@ -33,13 +33,13 @@ fun PostItem(
         Text(
             text = post.title,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            color = MaterialTheme.colorScheme.onTertiaryContainer,
         )
         Spacer(modifier = Modifier.height(spacingSmall))
         Text(
             text = post.body,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f),
         )
     }
 }

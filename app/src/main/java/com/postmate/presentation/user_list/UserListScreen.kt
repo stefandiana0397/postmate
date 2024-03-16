@@ -19,8 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 // import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -32,13 +30,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.postmate.R
 import com.postmate.domain.model.User
-import com.postmate.presentation.common.AppToolbar
-import com.postmate.presentation.common.AppToolbarText
+import com.postmate.presentation.common.components.AppToolbar
+import com.postmate.presentation.common.components.AppToolbarText
 import com.postmate.presentation.navigation.Screen
 import com.postmate.presentation.ui.theme.spacingExtraLarge
 import com.postmate.presentation.ui.theme.spacingMedium
 import com.postmate.presentation.ui.theme.spacingSmall
-import com.postmate.presentation.user_list.UserUtil.displayPhoto
+import com.postmate.presentation.common.util.FormattingUtils.displayPhoto
 import com.postmate.presentation.user_list.components.UserItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +68,7 @@ fun UserListScreen(
         Column(
             Modifier.padding(paddingValues)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondary),
+                .background(MaterialTheme.colorScheme.secondaryContainer),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,
         ) {
@@ -85,38 +83,34 @@ fun UserListScreen(
                 state = refreshState,
                 onRefresh = { onEvent(UserEvent.SwipeToRefresh) },
             ) {
-                if (userState.users.isEmpty()) {
-                    Box(
-                        modifier =
-                            Modifier.fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.surface)
-                                .padding(spacingMedium),
-                    ) {
-                        Text(
-                            textAlign = TextAlign.Start,
-                            text = stringResource(id = R.string.no_data),
-                            color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
-                }
                 LazyColumn(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     contentPadding = PaddingValues(bottom = spacingExtraLarge),
                 ) {
+                    item {
+                        if (userState.users.isEmpty()) {
+                            Box(
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.surface)
+                                        .padding(spacingMedium),
+                            ) {
+                                Text(
+                                    textAlign = TextAlign.Start,
+                                    text = stringResource(id = R.string.no_data),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                            }
+                        }
+                    }
                     itemsIndexed(userState.users) { index, user ->
                         UserItem(
                             user = user,
                             displayPhoto = displayPhoto(user.id),
                             onClick = {
                                 onEvent(UserEvent.SelectUser(user))
-                                navigateTo(
-                                    Screen.UserDetailsScreen.route +
-                                        "/${user.id}" +
-                                        "/${user.name}" +
-                                        "/${user.email}" +
-                                        "/${displayPhoto(user.id)}",
-                                )
+                                navigateTo(Screen.UserDetailsScreen.createRoute(user))
                             },
                         )
                         if (index < userState.users.size - 1) {
@@ -131,7 +125,7 @@ fun UserListScreen(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun UserListScreenPreview() {
     UserListScreen(
@@ -141,7 +135,7 @@ fun UserListScreenPreview() {
     )
 }
 
-@Preview
+@Preview(showBackground = true, widthDp = 700, heightDp = 500)
 @Composable
 fun UserListScreenPreview2() {
     UserListScreen(

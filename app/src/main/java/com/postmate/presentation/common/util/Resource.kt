@@ -1,4 +1,4 @@
-package com.postmate.util
+package com.postmate.presentation.common.util
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
     class Success<T>(data: T? = null) : Resource<T>(data)

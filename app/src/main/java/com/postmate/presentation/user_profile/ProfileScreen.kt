@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -35,20 +33,14 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.postmate.R
 import com.postmate.domain.model.Post
 import com.postmate.domain.model.User
-import com.postmate.presentation.common.AppToolbar
-import com.postmate.presentation.common.AppToolbarText
-import com.postmate.presentation.common.ToolbarAction
-import com.postmate.presentation.common.UserIcon
-import com.postmate.presentation.navigation.Screen
+import com.postmate.presentation.common.components.AppToolbar
+import com.postmate.presentation.common.components.AppToolbarText
+import com.postmate.presentation.common.components.ToolbarAction
+import com.postmate.presentation.common.components.UserIcon
 import com.postmate.presentation.ui.theme.spacingExtraLarge
 import com.postmate.presentation.ui.theme.spacingLarge
 import com.postmate.presentation.ui.theme.spacingMedium
 import com.postmate.presentation.ui.theme.spacingSmall
-import com.postmate.presentation.user_list.UserEvent
-import com.postmate.presentation.user_list.UserListScreen
-import com.postmate.presentation.user_list.UserState
-import com.postmate.presentation.user_list.UserUtil
-import com.postmate.presentation.user_list.components.UserItem
 import com.postmate.presentation.user_profile.components.PostItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +62,7 @@ fun ProfileScreen(
                     AppToolbarText(
                         text = stringResource(id = R.string.detalii_contact),
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(0.8f),
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 },
                 navIcon = {
@@ -91,36 +83,41 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(spacingSmall))
             Text(text = profileState.selectedUser?.name ?: "", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(spacingSmall))
-            Text(text = profileState.selectedUser?.email ?: "", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = profileState.selectedUser?.email ?: "",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+            )
             Spacer(modifier = Modifier.height(spacingMedium))
             SwipeRefresh(
                 state = refreshState,
                 onRefresh = { onEvent(ProfileEvent.SwipeToRefresh) },
             ) {
-                if (profileState.posts.isEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondary)
-                            .padding(horizontal = spacingLarge, vertical = spacingLarge)
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    ) {
-                        Text(
-                            textAlign = TextAlign.Start,
-                            text = stringResource(id = R.string.no_data),
-                            color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
-                }
-
                 LazyColumn(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     contentPadding = PaddingValues(bottom = spacingExtraLarge),
                 ) {
+                    item {
+                        if (profileState.posts.isEmpty()) {
+                            Box(
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                                        .padding(horizontal = spacingLarge, vertical = spacingLarge)
+                                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                            ) {
+                                Text(
+                                    textAlign = TextAlign.Start,
+                                    text = stringResource(id = R.string.no_data),
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                            }
+                        }
+                    }
+
                     itemsIndexed(profileState.posts) { index, post ->
-                        PostItem(
-                            post = post,
-                        )
+                        PostItem(post = post)
                         if (index < profileState.posts.size - 1) {
                             HorizontalDivider(
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.02f),
@@ -132,7 +129,6 @@ fun ProfileScreen(
         }
     }
 }
-
 
 @Preview
 @Composable

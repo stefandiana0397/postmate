@@ -1,4 +1,4 @@
-package com.postmate.presentation.common
+package com.postmate.presentation.common.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
