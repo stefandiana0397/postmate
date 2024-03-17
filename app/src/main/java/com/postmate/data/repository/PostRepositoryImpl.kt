@@ -27,17 +27,15 @@ class PostRepositoryImpl
                 try {
                     val response = api.getPostsByUser(user.id)
                     val remoteUsers = response.body()?.toPostList()
-                    val postEntities = remoteUsers?.toPostEntityList()
-                    postEntities?.let {
-                        postDao.deletePostsByUserId(user.id)
-                        postDao.insertPosts(it)
-                    }
-                    localPosts = postEntities?.toPostList() ?: localPosts
+                    remoteUsers?.toPostEntityList()?.let { postDao.updatePostsByUserId(user.id, it) }
+                    localPosts = postDao.getPostsByUserId(user.id)?.toPostList() ?: emptyList()
                     emit(Resource.Success(localPosts))
                 } catch (e: HttpException) {
                     emit(Resource.Error(message = e.message ?: "Invalid Response", data = localPosts))
                 } catch (e: IOException) {
                     emit(Resource.Error(message = e.message ?: "Couldn't reach server", data = localPosts))
+                } catch (e: Exception) {
+                    emit(Resource.Error(message = e.message ?: "Unknown error", data = localPosts))
                 }
             }.flowOn(Dispatchers.IO)
     }

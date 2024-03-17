@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.postmate.data.local.entity.PostEntity
 
 @Dao
@@ -22,4 +23,13 @@ interface PostDao {
 
     @Query("SELECT * FROM post WHERE userId = :userId")
     suspend fun getPostsByUserId(userId: Int): List<PostEntity>?
+
+    @Transaction
+    suspend fun updatePostsByUserId(
+        userId: Int,
+        posts: List<PostEntity>,
+    ) {
+        deletePostsByUserId(userId)
+        insertPosts(posts)
+    }
 }

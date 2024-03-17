@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -109,12 +110,14 @@ fun TopSection(
         Text(
             text = user.name,
             style = MaterialTheme.typography.titleLarge,
+            overflow = TextOverflow.Ellipsis,
         )
         Spacer(modifier = Modifier.height(spacingSmall))
         Text(
             text = user.email,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

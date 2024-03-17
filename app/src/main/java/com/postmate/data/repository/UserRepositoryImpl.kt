@@ -26,17 +26,15 @@ class UserRepositoryImpl
                 try {
                     val response = api.getUsers()
                     val remoteUsers = response.body()?.toUserList()
-                    val userEntities = remoteUsers?.toUserEntityList()
-                    userEntities?.let {
-                        userDao.deleteAll()
-                        userDao.insertUsers(it)
-                    }
-                    localUsers = userEntities?.toUserList() ?: localUsers
+                    remoteUsers?.toUserEntityList()?.let { userDao.updateUsers(it) }
+                    localUsers = userDao.getUsers()?.toUserList() ?: emptyList()
                     emit(Resource.Success(localUsers))
                 } catch (e: HttpException) {
                     emit(Resource.Error(message = e.message ?: "Invalid Response", data = localUsers))
                 } catch (e: IOException) {
                     emit(Resource.Error(message = e.message ?: "Couldn't reach server", data = localUsers))
+                } catch (e: Exception) {
+                    emit(Resource.Error(message = e.message ?: "Unknown error", data = localUsers))
                 }
             }.flowOn(Dispatchers.IO)
     }

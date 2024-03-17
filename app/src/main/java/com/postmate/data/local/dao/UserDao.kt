@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.postmate.data.local.entity.UserEntity
 
 @Dao
@@ -19,4 +20,10 @@ interface UserDao {
 
     @Query("DELETE FROM user WHERE id = :userId")
     suspend fun deleteUserById(userId: Int)
+
+    @Transaction
+    suspend fun updateUsers(users: List<UserEntity>) {
+        deleteAll()
+        insertUsers(users)
+    }
 }
