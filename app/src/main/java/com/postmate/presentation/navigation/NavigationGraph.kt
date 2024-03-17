@@ -1,7 +1,6 @@
 package com.postmate.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -13,7 +12,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.postmate.presentation.user_list.UserListScreen
 import com.postmate.presentation.user_list.UserListViewModel
-import com.postmate.presentation.user_profile.ProfileEvent
 import com.postmate.presentation.user_profile.ProfileScreen
 import com.postmate.presentation.user_profile.ProfileViewModel
 
@@ -58,16 +56,8 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
                         nullable = false
                     },
                 ),
-        ) { entry ->
-
-            val userId = entry.arguments?.getInt(ArgumentTypeEnum.ITEM_ID.name, 0)
-            val name = entry.arguments?.getString(ArgumentTypeEnum.NAME.name, "")
-            val email = entry.arguments?.getString(ArgumentTypeEnum.EMAIL.name, "")
-
+        ) {
             val viewModel = hiltViewModel<ProfileViewModel>()
-            LaunchedEffect(key1 = userId) {
-                viewModel.onEvent(ProfileEvent.LoadUser(userId, name, email))
-            }
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             ProfileScreen(

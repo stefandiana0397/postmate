@@ -3,14 +3,15 @@ package com.postmate.presentation.user_profile
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -26,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -35,10 +35,11 @@ import com.postmate.domain.model.Post
 import com.postmate.domain.model.User
 import com.postmate.presentation.common.components.AppToolbar
 import com.postmate.presentation.common.components.AppToolbarText
+import com.postmate.presentation.common.components.ErrorItem
+import com.postmate.presentation.common.components.NoContentItem
 import com.postmate.presentation.common.components.ToolbarAction
 import com.postmate.presentation.common.components.UserIcon
 import com.postmate.presentation.ui.theme.spacingExtraLarge
-import com.postmate.presentation.ui.theme.spacingLarge
 import com.postmate.presentation.ui.theme.spacingMedium
 import com.postmate.presentation.ui.theme.spacingSmall
 import com.postmate.presentation.user_profile.components.PostItem
@@ -53,9 +54,8 @@ fun ProfileScreen(
 ) {
     BackHandler(onBack = onScreenClose)
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val refreshState = rememberSwipeRefreshState(isRefreshing = profileState.isLoading)
     Scaffold(
+        modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing),
         topBar = {
             AppToolbar(
                 title = {
@@ -75,60 +75,83 @@ fun ProfileScreen(
         },
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues).fillMaxSize(),
+            modifier = modifier.padding(paddingValues).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
             profileState.selectedUser?.let {
-                UserIcon(user = profileState.selectedUser)
-                Spacer(modifier = Modifier.height(spacingSmall))
-                Text(
-                    text = profileState.selectedUser.name,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Spacer(modifier = Modifier.height(spacingSmall))
-                Text(
-                    text = profileState.selectedUser.email,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                )
+                TopSection(user = it)
                 Spacer(modifier = Modifier.height(spacingMedium))
-                SwipeRefresh(
-                    state = refreshState,
-                    onRefresh = { onEvent(ProfileEvent.SwipeToRefresh) },
-                ) {
-                    LazyColumn(
-                        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                        contentPadding = PaddingValues(bottom = spacingExtraLarge),
-                    ) {
-                        item {
-                            if (profileState.posts.isEmpty()) {
-                                Box(
-                                    modifier =
-                                        Modifier.fillMaxWidth()
-                                            .background(MaterialTheme.colorScheme.tertiaryContainer)
-                                            .padding(horizontal = spacingLarge, vertical = spacingLarge)
-                                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                                ) {
-                                    Text(
-                                        textAlign = TextAlign.Start,
-                                        text = stringResource(id = R.string.no_data),
-                                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                    )
-                                }
-                            }
-                        }
+                PostSection(posts = profileState.posts, isLoading = profileState.isLoading, error = profileState.error, onEvent = onEvent)
+            } ?: run {
+                NoContentItem(
+                    noContent = true,
+                    colorText = MaterialTheme.colorScheme.onTertiaryContainer,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.tertiaryContainer),
+                )
+            }
+        }
+    }
+}
 
-                        itemsIndexed(profileState.posts) { index, post ->
-                            PostItem(post = post)
-                            if (index < profileState.posts.size - 1) {
-                                HorizontalDivider(
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.02f),
-                                )
-                            }
-                        }
-                    }
+@Composable
+fun TopSection(
+    user: User,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+    ) {
+        UserIcon(user = user)
+        Spacer(modifier = Modifier.height(spacingSmall))
+        Text(
+            text = user.name,
+            style = MaterialTheme.typography.titleLarge,
+        )
+        Spacer(modifier = Modifier.height(spacingSmall))
+        Text(
+            text = user.email,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PostSection(
+    posts: List<Post>,
+    isLoading: Boolean,
+    error: String?,
+    onEvent: (ProfileEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val refreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+    SwipeRefresh(
+        state = refreshState,
+        onRefresh = { onEvent(ProfileEvent.SwipeToRefresh) },
+    ) {
+        LazyColumn(
+            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = PaddingValues(bottom = spacingExtraLarge),
+        ) {
+            item {
+                NoContentItem(
+                    noContent = posts.isEmpty(),
+                    colorText = MaterialTheme.colorScheme.onTertiaryContainer,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.tertiaryContainer),
+                )
+            }
+            item {
+                ErrorItem(error = error)
+            }
+            itemsIndexed(posts) { index, post ->
+                PostItem(post = post)
+                if (index < posts.size - 1) {
+                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.02f))
                 }
             }
         }

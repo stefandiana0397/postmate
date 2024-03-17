@@ -21,7 +21,6 @@ import com.postmate.presentation.ui.theme.spacingMedium
 @Composable
 fun UserItem(
     user: User,
-    displayPhoto: Boolean,
     onClick: (User) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -58,7 +57,6 @@ fun UserItem(
 fun UserItemPreview() {
     UserItem(
         user = User.default,
-        displayPhoto = false,
         onClick = {},
     )
 }

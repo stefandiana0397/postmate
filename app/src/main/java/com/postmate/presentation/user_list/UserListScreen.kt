@@ -2,13 +2,14 @@ package com.postmate.presentation.user_list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,11 +33,12 @@ import com.postmate.R
 import com.postmate.domain.model.User
 import com.postmate.presentation.common.components.AppToolbar
 import com.postmate.presentation.common.components.AppToolbarText
+import com.postmate.presentation.common.components.ErrorItem
+import com.postmate.presentation.common.components.NoContentItem
 import com.postmate.presentation.navigation.Screen
 import com.postmate.presentation.ui.theme.spacingExtraLarge
 import com.postmate.presentation.ui.theme.spacingMedium
 import com.postmate.presentation.ui.theme.spacingSmall
-import com.postmate.presentation.common.util.FormattingUtils.displayPhoto
 import com.postmate.presentation.user_list.components.UserItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,10 +49,8 @@ fun UserListScreen(
     navigateTo: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val refreshState = rememberSwipeRefreshState(isRefreshing = userState.isLoading)
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing),
         topBar = {
             AppToolbar(
                 title = {
@@ -59,14 +59,13 @@ fun UserListScreen(
                         style = MaterialTheme.typography.headlineMedium,
                     )
                 },
-                scrollBehavior = scrollBehavior,
                 extended = true,
             )
         },
         contentWindowInsets = WindowInsets(top = 0.dp),
     ) { paddingValues ->
         Column(
-            Modifier.padding(paddingValues)
+            modifier.padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.secondaryContainer),
             verticalArrangement = Arrangement.Top,
@@ -79,46 +78,57 @@ fun UserListScreen(
                 modifier = Modifier.fillMaxWidth().padding(start = spacingMedium, top = spacingSmall, bottom = spacingSmall),
                 color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.6f),
             )
-            SwipeRefresh(
-                state = refreshState,
-                onRefresh = { onEvent(UserEvent.SwipeToRefresh) },
-            ) {
-                LazyColumn(
-                    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                    contentPadding = PaddingValues(bottom = spacingExtraLarge),
-                ) {
-                    item {
-                        if (userState.users.isEmpty()) {
-                            Box(
-                                modifier =
-                                    Modifier.fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.surface)
-                                        .padding(spacingMedium),
-                            ) {
-                                Text(
-                                    textAlign = TextAlign.Start,
-                                    text = stringResource(id = R.string.no_data),
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                            }
-                        }
-                    }
-                    itemsIndexed(userState.users) { index, user ->
-                        UserItem(
-                            user = user,
-                            displayPhoto = displayPhoto(user.id),
-                            onClick = {
-                                onEvent(UserEvent.SelectUser(user))
-                                navigateTo(Screen.UserDetailsScreen.createRoute(user))
-                            },
-                        )
-                        if (index < userState.users.size - 1) {
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.02f),
-                            )
-                        }
-                    }
+            ContactsList(
+                users = userState.users,
+                isLoading = userState.isLoading,
+                error = userState.error,
+                onEvent = onEvent,
+                navigateTo = navigateTo,
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ContactsList(
+    users: List<User>,
+    isLoading: Boolean,
+    error: String?,
+    onEvent: (UserEvent) -> Unit,
+    navigateTo: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val refreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+    SwipeRefresh(
+        state = refreshState,
+        onRefresh = { onEvent(UserEvent.SwipeToRefresh) },
+    ) {
+        LazyColumn(
+            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = PaddingValues(bottom = spacingExtraLarge),
+        ) {
+            item {
+                NoContentItem(
+                    noContent = users.isEmpty(),
+                    colorText = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                )
+            }
+            item {
+                ErrorItem(error = error)
+            }
+            itemsIndexed(users) { index, user ->
+                UserItem(
+                    user = user,
+                    onClick = {
+                        onEvent(UserEvent.SelectUser(user))
+                        navigateTo(Screen.UserDetailsScreen.createRoute(user))
+                    },
+                )
+                if (index < users.size - 1) {
+                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.02f))
                 }
             }
         }
