@@ -4,5 +4,4 @@ enum class ArgumentTypeEnum {
     ITEM_ID,
     NAME,
     EMAIL,
-    DISPLAY_PHOTO,
 }

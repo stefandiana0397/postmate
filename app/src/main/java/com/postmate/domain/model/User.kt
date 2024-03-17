@@ -15,11 +15,11 @@ data class User(
 
         val default =
             User(
-                6777842,
-                "Pres. Amogh Bhattathiri",
-                "amogh_bhattathiri_pres@bahringer.test",
-                "female",
-                "active",
+                0,
+                "",
+                "",
+                "",
+                "",
             )
     }
 }

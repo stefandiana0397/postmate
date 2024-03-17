@@ -40,7 +40,7 @@ fun UserItem(
             )
         },
         leadingContent = {
-            UserIcon(displayPhoto = displayPhoto, name = user.name)
+            UserIcon(user = user)
         },
         modifier =
             modifier

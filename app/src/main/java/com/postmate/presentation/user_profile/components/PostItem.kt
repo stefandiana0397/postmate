@@ -23,12 +23,13 @@ fun PostItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
-            .padding(spacingMedium),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.tertiaryContainer)
+                .padding(spacingMedium),
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         Text(
             text = post.title,
@@ -44,11 +45,10 @@ fun PostItem(
     }
 }
 
-
 @Preview
 @Composable
 fun PostItemPreview() {
     PostItem(
-        post = Post.default
+        post = Post.default,
     )
 }

@@ -7,7 +7,7 @@ import com.postmate.data.repository.UserRepositoryImpl
 import com.postmate.domain.repository.IPostRepository
 import com.postmate.domain.repository.IUserRepository
 import com.postmate.domain.use_cases.FetchActiveUsersUseCase
-import com.postmate.domain.use_cases.FetchPostsByUserUseCase
+import com.postmate.domain.use_cases.FetchPostByUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +43,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideFetchPostsByUserUseCase(repository: IPostRepository): FetchPostsByUserUseCase {
-        return FetchPostsByUserUseCase(repository)
+    fun provideFetchPostsByUserUseCase(repository: IPostRepository): FetchPostByUserUseCase {
+        return FetchPostByUserUseCase(repository)
     }
 }

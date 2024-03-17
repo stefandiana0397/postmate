@@ -79,49 +79,54 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            UserIcon(displayPhoto = profileState.displayPhoto, name = profileState.selectedUser?.name ?: "")
-            Spacer(modifier = Modifier.height(spacingSmall))
-            Text(text = profileState.selectedUser?.name ?: "", style = MaterialTheme.typography.titleLarge)
-            Spacer(modifier = Modifier.height(spacingSmall))
-            Text(
-                text = profileState.selectedUser?.email ?: "",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-            )
-            Spacer(modifier = Modifier.height(spacingMedium))
-            SwipeRefresh(
-                state = refreshState,
-                onRefresh = { onEvent(ProfileEvent.SwipeToRefresh) },
-            ) {
-                LazyColumn(
-                    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                    contentPadding = PaddingValues(bottom = spacingExtraLarge),
+            profileState.selectedUser?.let {
+                UserIcon(user = profileState.selectedUser)
+                Spacer(modifier = Modifier.height(spacingSmall))
+                Text(
+                    text = profileState.selectedUser.name,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Spacer(modifier = Modifier.height(spacingSmall))
+                Text(
+                    text = profileState.selectedUser.email,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                )
+                Spacer(modifier = Modifier.height(spacingMedium))
+                SwipeRefresh(
+                    state = refreshState,
+                    onRefresh = { onEvent(ProfileEvent.SwipeToRefresh) },
                 ) {
-                    item {
-                        if (profileState.posts.isEmpty()) {
-                            Box(
-                                modifier =
-                                    Modifier.fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.tertiaryContainer)
-                                        .padding(horizontal = spacingLarge, vertical = spacingLarge)
-                                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                            ) {
-                                Text(
-                                    textAlign = TextAlign.Start,
-                                    text = stringResource(id = R.string.no_data),
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
+                    LazyColumn(
+                        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                        contentPadding = PaddingValues(bottom = spacingExtraLarge),
+                    ) {
+                        item {
+                            if (profileState.posts.isEmpty()) {
+                                Box(
+                                    modifier =
+                                        Modifier.fillMaxWidth()
+                                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                                            .padding(horizontal = spacingLarge, vertical = spacingLarge)
+                                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                                ) {
+                                    Text(
+                                        textAlign = TextAlign.Start,
+                                        text = stringResource(id = R.string.no_data),
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                    )
+                                }
                             }
                         }
-                    }
 
-                    itemsIndexed(profileState.posts) { index, post ->
-                        PostItem(post = post)
-                        if (index < profileState.posts.size - 1) {
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.02f),
-                            )
+                        itemsIndexed(profileState.posts) { index, post ->
+                            PostItem(post = post)
+                            if (index < profileState.posts.size - 1) {
+                                HorizontalDivider(
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.02f),
+                                )
+                            }
                         }
                     }
                 }
@@ -134,7 +139,7 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview() {
     ProfileScreen(
-        profileState = ProfileState(posts = listOf(Post.default), selectedUser = User.default, displayPhoto = true),
+        profileState = ProfileState(posts = listOf(Post.default), selectedUser = User.default),
         onEvent = {},
         onScreenClose = {},
     )

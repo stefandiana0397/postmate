@@ -17,13 +17,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.postmate.domain.model.User
 import com.postmate.presentation.common.util.FormattingUtils
+import com.postmate.presentation.common.util.FormattingUtils.displayPhoto
 
 @Composable
-fun UserIcon(
-    displayPhoto: Boolean,
-    name: String,
-) {
+fun UserIcon(user: User) {
     Box(
         modifier =
             Modifier
@@ -33,9 +32,9 @@ fun UserIcon(
                 .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)),
         contentAlignment = Alignment.Center,
     ) {
-        if (displayPhoto) {
+        if (displayPhoto(user.id)) {
             SubcomposeAsyncImage(
-                model = FormattingUtils.getPhotoUrl(name),
+                model = FormattingUtils.getPhotoUrl(user.name),
                 contentDescription = "Profile image",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -43,7 +42,7 @@ fun UserIcon(
             )
         } else {
             Text(
-                text = FormattingUtils.extractInitials(name),
+                text = FormattingUtils.extractInitials(user.name),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onTertiary,
             )

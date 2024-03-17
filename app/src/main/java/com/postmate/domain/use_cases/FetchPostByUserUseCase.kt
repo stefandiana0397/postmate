@@ -6,14 +6,14 @@ import com.postmate.presentation.common.util.Resource
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class FetchPostsByUserUseCase
+class FetchPostByUserUseCase
     @Inject
     constructor(
         private val postRepository: IPostRepository,
     ) {
         suspend fun execute(user: User) =
             postRepository.fetchPostsByUser(user).map { resource ->
-                val posts = resource.data?.sortedBy { it.title } ?: emptyList()
+                val posts = resource.data?.firstOrNull()?.let { listOf(it) } ?: emptyList()
                 when (resource) {
                     is Resource.Loading -> Resource.Loading(posts)
                     is Resource.Success -> Resource.Success(posts)

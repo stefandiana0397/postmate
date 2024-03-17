@@ -3,7 +3,7 @@ package com.postmate.presentation.user_profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.postmate.domain.model.User
-import com.postmate.domain.use_cases.FetchPostsByUserUseCase
+import com.postmate.domain.use_cases.FetchPostByUserUseCase
 import com.postmate.presentation.common.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ProfileViewModel
     @Inject
     constructor(
-        private val fetchPostsByUserUseCase: FetchPostsByUserUseCase,
+        private val fetchPostsByUserUseCase: FetchPostByUserUseCase,
     ) : ViewModel() {
         private val _state = MutableStateFlow(ProfileState())
         val state = _state.asStateFlow()
@@ -73,7 +73,7 @@ class ProfileViewModel
                     fetchPosts()
                 }
                 is ProfileEvent.LoadUser -> {
-                    loadUser(event.userId, event.name, event.email, event.displayPhoto)
+                    loadUser(event.userId, event.name, event.email)
                 }
             }
         }
@@ -82,12 +82,10 @@ class ProfileViewModel
             userId: Int?,
             name: String?,
             email: String?,
-            displayPhoto: Boolean?,
         ) {
             _state.update {
                 it.copy(
                     selectedUser = User(userId ?: 0, name ?: "", email ?: "", "", ""),
-                    displayPhoto = displayPhoto ?: true,
                 )
             }
             fetchPosts()

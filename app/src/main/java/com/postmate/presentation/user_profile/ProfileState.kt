@@ -8,5 +8,4 @@ data class ProfileState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val selectedUser: User? = null,
-    val displayPhoto: Boolean = true,
 )
